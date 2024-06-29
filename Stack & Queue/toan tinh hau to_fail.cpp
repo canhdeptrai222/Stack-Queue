@@ -39,33 +39,36 @@ void push(Stack& s, char* x) {
 		q->next = p;
 	}
 }
-//CHUA HOAN THANH , CHUA DELETE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-char* pop(Stack& s) {
+char* get(Stack s) {
 	if (isEmpty(s) == false) {
 		Node* p = s.top;
 		Node* prev = NULL;
-		char* tmp = new char[strlen(p->value) + 1];
+		while (p->next != NULL) {
+			prev = p;
+			p = p->next;
+		}
+		if (prev == NULL)
+			return p->value;
+		return p->value;
+	}
+}
+void pop(Stack& s) {
+	if (isEmpty(s) == false) {
+		Node* p = s.top;
+		Node* prev = NULL;
 		while (p->next != NULL) {
 			prev = p;
 			p = p->next;
 		}
 		if (prev == NULL) {
-			strcpy(tmp, p->value);
+			
 			s.top = NULL;
 		}
 		else {
-			strcpy(tmp, p->value);
 			prev->next = NULL;
 		}
 		delete(p);
-		return tmp;
 	}
-}
-
-void coutPop(char* pop) {
-	char* po = pop;
-	cout << po << endl;
-	delete[]po;
 }
 bool checkDau(char* c) {
 	return strcmp(c, "+") == 0 || strcmp(c, "-") == 0 || strcmp(c, "*") == 0 || strcmp(c, "/") == 0;
@@ -77,8 +80,10 @@ void solve(char *c) {
 	char* p = strtok(c, " ");
 	while (p != NULL) {
 		if (checkDau(p)) {
-			int b = atoi(pop(s));
-			int a = atoi(pop(s));
+			int b = atoi(get(s));
+			pop(s);
+			int a = atoi(get(s));
+			pop(s);
 			if (strcmp(p, "+") == 0)
 				t = a + b;
 			else if (strcmp(p, "-") == 0)
@@ -96,10 +101,11 @@ void solve(char *c) {
 		}
 		p = strtok(NULL, " ");
 	}
-	coutPop(pop(s));
+	cout << get(s) << endl;
+	pop(s);
 	if (isEmpty(s))
 		cout << "EMPTY\n";
-	else cout << "NONEMPTY\n";
+	else cout << "NO EMPTY\n";
 }
 
 // 10 5 + 2 * 3 / => 10
